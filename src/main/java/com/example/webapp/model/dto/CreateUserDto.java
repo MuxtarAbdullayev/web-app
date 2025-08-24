@@ -12,19 +12,19 @@ import lombok.Setter;
 @Setter
 public class CreateUserDto {
 
-    @NotBlank(message = "İstifadəçi adı boş ola bilməz")
-    @Size(min = 3, max = 255, message = "İstifadəçi adı 3-255 simvol arasında olmalıdır")
+    @NotBlank(message = "{web-app.constraint.username.notblank}")
+    @Size(min = 3, max = 255)
     private String username;
 
-    @NotBlank(message = "Email boş ola bilməz")
-    @Email(message = "Email düzgün formatda deyil")
+    @Email
+    @NotBlank
     @UniqueEmail
     private String email;
 
     @NotBlank(message = "Şifrə boş ola bilməz")
     @Pattern(
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$",
-            message = "Şifrə ən az 8 simvol, böyük və kiçik hərf, rəqəm və xüsusi simvol olmalidir!"
+            message = "{web-app.constraint.password.pattern}"
     )
     private String password;
 }

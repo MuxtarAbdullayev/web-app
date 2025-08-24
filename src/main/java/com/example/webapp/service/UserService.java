@@ -22,7 +22,7 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
         } catch (DataIntegrityViolationException ex) {
-            throw new NotUniqueEmailException(ex.getMessage());
+            throw new NotUniqueEmailException();
         }
     }
 
@@ -31,5 +31,7 @@ public class UserService {
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setPassword(dto.getPassword());
+
+        save(user);
     }
 }
