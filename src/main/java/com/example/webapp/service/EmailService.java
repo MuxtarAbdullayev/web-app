@@ -1,5 +1,8 @@
 package com.example.webapp.service;
 
+import com.example.webapp.config.WebAppProperties;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
@@ -7,20 +10,19 @@ import org.springframework.stereotype.Service;
 import java.util.Properties;
 
 @Service
+@RequiredArgsConstructor
 public class EmailService {
 
     JavaMailSenderImpl mailSender;
+    private final WebAppProperties webAppProperties;
 
-    public EmailService() {
-        this.initialize();
-    }
-
+    @PostConstruct
     public void initialize() {
         this.mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.ethereal.email");
-        mailSender.setPort(587);
-        mailSender.setUsername("lance.trantow@ethereal.email");
-        mailSender.setPassword("EU7JqDp3v4fqZb7vWB");
+        mailSender.setHost(webAppProperties.getEmail().host());
+        mailSender.setPort(webAppProperties.getEmail().port());
+        mailSender.setUsername(webAppProperties.getEmail().username());
+        mailSender.setPassword(webAppProperties.getEmail().password());
 
         Properties properties = mailSender.getJavaMailProperties();
         properties.put("mail.smtp.starttls.enable", "true");
@@ -28,7 +30,7 @@ public class EmailService {
 
     public void sendActivationEmail(String email, String activationToken) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@my-app.com");
+        message.setFrom(webAppProperties.getEmail().from());
         message.setTo(email);
         message.setSubject("Account activation");
         message.setText(activationToken);

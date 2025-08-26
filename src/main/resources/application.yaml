@@ -13,3 +13,10 @@ spring:
   messages:
     basename: messages
     encoding: UTF-8
+
+  mail:
+    host: smtp.ethereal.email
+    port: 587
+    username: lance.trantow@ethereal.email
+    password: EU7JqDp3v4fqZb7vWB
+    from: noreply@my-app.com
