@@ -40,11 +40,21 @@ public class GlobalExceptionHandler {
         apiError.setStatus(400);
         apiError.setValidationErrors(e.getValidationErrors());
 
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity.status(400).body(apiError);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<String> handleNotFound(EntityNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ActivationNotificationException.class)
+    public ResponseEntity<ApiError> handleActivationNotificationException(ActivationNotificationException e) {
+        ApiError apiError = new ApiError();
+        apiError.setPath("/api/v1/users");
+        apiError.setMessage(e.getMessage());
+        apiError.setStatus(502);
+
+        return ResponseEntity.status(502).body(apiError);
     }
 }
