@@ -3,6 +3,7 @@ package com.example.webapp.exception;
 import com.example.webapp.error.ApiError;
 import com.example.webapp.shared.Messages;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,5 +41,10 @@ public class GlobalExceptionHandler {
         apiError.setValidationErrors(e.getValidationErrors());
 
         return ResponseEntity.badRequest().body(apiError);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<String> handleNotFound(EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

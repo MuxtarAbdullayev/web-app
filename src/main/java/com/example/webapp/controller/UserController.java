@@ -22,4 +22,10 @@ public class UserController {
         String message = messageSource.getMessage("web-app.create.user.success.message", null, LocaleContextHolder.getLocale());
         return ResponseEntity.ok(message);
     }
+
+    @DeleteMapping("api/v1/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
