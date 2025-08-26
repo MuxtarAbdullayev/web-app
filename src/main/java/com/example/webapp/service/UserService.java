@@ -4,20 +4,18 @@ import com.example.webapp.exception.NotUniqueEmailException;
 import com.example.webapp.model.dto.CreateUserDto;
 import com.example.webapp.model.entity.User;
 import com.example.webapp.repository.UserRepository;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -28,11 +26,12 @@ public class UserService {
     public final UserRepository userRepository;
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @Transactional(rollbackOn = MailException.class)
     public void save(User user) {
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setActivationToken(UUID.randomUUID().toString());
-            userRepository.save(user);
+            userRepository.saveAndFlush(user);
             sendActivationEmail(user);
         } catch (DataIntegrityViolationException ex) {
             throw new NotUniqueEmailException();

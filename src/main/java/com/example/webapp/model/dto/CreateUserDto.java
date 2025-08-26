@@ -18,7 +18,7 @@ public class CreateUserDto {
 
     @Email
     @NotBlank
-    @UniqueEmail
+    //@UniqueEmail
     private String email;
 
     @NotBlank(message = "Şifrə boş ola bilməz")
